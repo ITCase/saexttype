@@ -29,13 +29,14 @@ class FileStore(TypeDecorator):
         if value is not None:
             if hasattr(value, 'filename'):
                 return os.path.join(self.path, value.filename)
+            if 'filename' in value:
+                return os.path.join(self.path, value['filename'])
             if 'http://' in value or 'https://' in value:
                 return value
             return os.path.join(self.path, value)
 
     def process_result_value(self, value, dialect):
-        if value is not None:
-            value = value
+        value = {'filename': value, 'uid': None}
         return value
 
     def __repr__(self):
